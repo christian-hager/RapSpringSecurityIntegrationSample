@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SomeService Api
+Bundle-SymbolicName: de.chager.sandbox.someservice.api
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dipl.-Inf. (FH) Christian Hager
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: de.chager.sandbox.someservice.api

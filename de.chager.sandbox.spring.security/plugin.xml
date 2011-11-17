@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            class="de.chager.sandbox.spring.security.Application"
+            parameter="view"
+            id="de.chager.sandbox.spring.security.Application">
+      </entrypoint>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="RAP Perspective"
+            class="de.chager.sandbox.spring.security.Perspective"
+            id="de.chager.sandbox.spring.security.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="View"
+            class="de.chager.sandbox.spring.security.View"
+            id="de.chager.sandbox.spring.security.view">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            servletName="view"
+            themeId="org.eclipse.rap.design.example.fancy.theme"
+            defaultEntrypointId="de.chager.sandbox.spring.security.Application"
+            title="RAP Single View"
+            id="de.chager.sandbox.spring.security.branding">
+      </branding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="de.chager.sandbox.spring.security.commands.sampleCommand"
+            name="Logout">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="de.chager.sandbox.securityservice.ui.LogoutHandler"
+            commandId="de.chager.sandbox.spring.security.commands.sampleCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="de.chager.sandbox.spring.security.menus.fileMenu"
+               label="File"
+               mnemonic="M">
+            <command
+                  commandId="de.chager.sandbox.spring.security.commands.sampleCommand"
+                  id="de.chager.sandbox.spring.security.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mysql
+Bundle-SymbolicName: de.chager.sandbox.jdbc.mysql
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dipl.-Inf. (FH) Christian Hager
+Fragment-Host: com.springsource.com.mchange.v2.c3p0;bundle-version="0.9.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.mysql.jdbc;version="5.1.6"

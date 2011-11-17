@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                         http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/security
+                         http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- the definition of the service-bean for our own OSGi-based security 
+		service -->
+	<bean id="securityService"
+		class="de.chager.sandbox.securityservice.impl.SecurityServiceImpl">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="userService" ref="userService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+
+	<!-- authentication manager -->
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider
+			user-service-ref="userService">
+			<security:password-encoder ref="passwordEncoder">
+				<security:salt-source ref="saltSource" />
+			</security:password-encoder>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<!-- userservice -->
+	<bean id="userService"
+		class="de.chager.sandbox.securityservice.impl.JdbcUserDetailsManager">
+		<property name="dataSource" ref="dataSource" />
+		<property name="enableGroups" value="true" />
+		<property name="enableAuthorities" value="false" />
+		<property name="usersByUsernameQuery">
+			<value>select username, password, enabled, salt from users where username=?</value>
+		</property>
+		<property name="createUserSql">
+			<value>insert into users (username, password, enabled, salt) values (?,?,?,?)</value>
+		</property>
+	</bean>
+
+	<!-- password encoder -->
+	<bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<constructor-arg value="256" />
+	</bean>
+
+	<!-- salt source -->
+	<bean
+		class="org.springframework.security.authentication.dao.ReflectionSaltSource"
+		id="saltSource">
+		<property name="userPropertyToUse" value="salt" />
+	</bean>
+
+	<!-- security interceptor -->
+	<bean id="securityInterceptor"
+		class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="securityMetadataSource">
+			<bean
+				class="org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource">
+				<property name="methodSecurityMetadataSources">
+					<list>
+						<bean
+							class="org.springframework.security.access.prepost.PrePostAnnotationSecurityMetadataSource">
+							<constructor-arg>
+								<bean
+									class="org.springframework.security.access.expression.method.ExpressionBasedAnnotationAttributeFactory">
+									<constructor-arg>
+										<bean
+											class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler" />
+									</constructor-arg>
+								</bean>
+							</constructor-arg>
+						</bean>
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="validateConfigAttributes" value="false" />
+		<property name="rejectPublicInvocations" value="false" />
+		<property name="accessDecisionManager">
+			<bean id="accessDecisionManager"
+				class="org.springframework.security.access.vote.AffirmativeBased">
+				<property name="decisionVoters">
+					<list>
+						<bean class="org.springframework.security.access.vote.RoleVoter" />
+						<bean
+							class="org.springframework.security.access.vote.AuthenticatedVoter" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- datasource -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost/sec" />
+		<property name="user" value="sec_usr" />
+		<property name="password" value="sec_usr" />
+		<property name="idleConnectionTestPeriod" value="1800" />
+		<property name="maxIdleTime" value="3600" />
+		<property name="maxConnectionAge" value="7200" />
+		<property name="minPoolSize" value="10" />
+		<property name="acquireIncrement" value="10" />
+		<property name="maxPoolSize" value="40" />
+	</bean>
+
+</beans>

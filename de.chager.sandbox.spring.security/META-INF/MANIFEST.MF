@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Spring Security Rap Demo
+Bundle-SymbolicName: de.chager.sandbox.spring.security; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.chager.sandbox.spring.security.Activator
+Bundle-Vendor: Dipl.-Inf. (FH) Christian Hager
+Require-Bundle: org.eclipse.rap.ui,
+ de.chager.sandbox.someservice.api;bundle-version="1.0.0",
+ de.chager.sandbox.securityservice.api;bundle-version="1.0.0",
+ de.chager.sandbox.securityservice.ui;bundle-version="1.0.0",
+ org.springframework.security.core;bundle-version="3.0.5"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0",
+ org.osgi.framework;version="1.4.0"
